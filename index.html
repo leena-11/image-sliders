@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Welcome Image Slider</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
+
+    /* ===== WELCOME PAGE ===== */
+    .welcome {
+        text-align: center;
+    }
+
+    .welcome h1 {
+        font-size: 40px;
+        margin-bottom: 20px;
+    }
+
+    .welcome button {
+        padding: 12px 25px;
+        font-size: 18px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        background: white;
+        color: #333;
+    }
+
+    .welcome button:hover {
+        background: #ffeb3b;
+    }
+
+    /* ===== SLIDER PAGE ===== */
+    .slider-page {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .slider {
+        width: 500px;
+        height: 300px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        background: black;
+    }
+
+    .slider img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .controls {
+        margin-top: 15px;
+    }
+
+    .controls button {
+        padding: 8px 20px;
+        margin: 0 10px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        background: white;
+        color: black;
+        font-size: 16px;
+    }
+
+    .controls button:hover {
+        background: #ffeb3b;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- ===== WELCOME SCREEN ===== -->
+<div class="welcome" id="welcome">
+    <h1>Welcome to Image Gallery</h1>
+    <p>Click below to view the slideshow</p>
+    <button onclick="startSlider()">View Images</button>
+</div>
+
+<!-- ===== IMAGE SLIDER SCREEN ===== -->
+<div class="slider-page" id="sliderPage">
+    <h2>Image Slider</h2>
+
+    <div class="slider">
+        <img id="sliderImage">
+    </div>
+
+    <div class="controls">
+        <button onclick="prevImage()">Previous</button>
+        <button onclick="nextImage()">Next</button>
+    </div>
+</div>
+
+<script>
+    let images = [
+        "https://picsum.photos/id/1015/800/500",
+        "https://picsum.photos/id/1016/800/500",
+        "https://picsum.photos/id/1018/800/500",
+        "https://picsum.photos/id/1020/800/500",
+        "https://picsum.photos/id/1024/800/500"
+    ];
+
+    let index = 0;
+    let interval;
+    let sliderImage = document.getElementById("sliderImage");
+
+    function startSlider() {
+        document.getElementById("welcome").style.display = "none";
+        document.getElementById("sliderPage").style.display = "flex";
+        sliderImage.src = images[index];
+        interval = setInterval(nextImage, 3000); // continuous slide
+    }
+
+    function nextImage() {
+        index = (index + 1) % images.length;
+        sliderImage.src = images[index];
+    }
+
+    function prevImage() {
+        index = (index - 1 + images.length) % images.length;
+        sliderImage.src = images[index];
+    }
+</script>
+
+</body>
+</html>
