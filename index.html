@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Welcome Image Slider</title>
+
+<style>
+/* ===== RESET ===== */
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: white;
+    overflow: hidden;
+}
+
+/* ===== BUTTON STYLE ===== */
+button {
+    padding: 12px 28px;
+    margin: 10px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ffffff, #e0e0e0);
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #ffeb3b, #ffc107);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+/* ===== WELCOME PAGE ===== */
+.welcome {
+    width: 100%;
+    height: 100vh;
+    background-image: url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
+    background-size: cover;
+    background-position: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.welcome::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+}
+
+.welcome * {
+    position: relative;
+    z-index: 1;
+}
+
+.welcome h1 {
+    font-size: 46px;
+    margin-bottom: 10px;
+    animation: slideDown 1s ease;
+}
+
+.welcome p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+/* ===== BLURRED BACKGROUND ===== */
+.bg {
+    position: fixed;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(18px);
+    transform: scale(1.1);
+    z-index: -2;
+}
+
+.bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+}
+
+/* ===== SLIDER PAGE ===== */
+.slider-page {
+    display: none;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    animation: fadeIn 0.8s ease;
+}
+
+h2 {
+    margin-bottom: 15px;
+    font-size: 32px;
+}
+
+/* ===== SLIDER ===== */
+.slider {
+    width: 520px;
+    height: 320px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: black;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    border: 3px solid rgba(255,255,255,0.2);
+}
+
+.slider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: fadeZoom 1s ease-in-out;
+}
+
+/* ===== CAPTION ===== */
+#caption {
+    margin-top: 12px;
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+/* ===== CONTROLS ===== */
+.controls {
+    margin-top: 20px;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeZoom {
+    from { opacity: 0; transform: scale(1.08); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== WELCOME ===== -->
+<div class="welcome" id="welcome">
+    <h1>Welcome to Image Gallery</h1>
+    <p>Explore beautiful moments with smooth transitions</p>
+
+    <button onclick="startSlider()">View Images</button>
+    <button onclick="exitApp()">Exit</button>
+</div>
+
+<!-- ===== BLURRED BG ===== -->
+<div class="bg" id="bg"></div>
+
+<!-- ===== SLIDER PAGE ===== -->
+<div class="slider-page" id="sliderPage">
+    <h2>Image Slider</h2>
+
+    <div class="slider">
+        <img id="sliderImage">
+    </div>
+
+    <div id="caption"></div>
+
+    <div class="controls">
+        <button onclick="prevImage()">Previous</button>
+        <button onclick="nextImage()">Next</button><br>
+        <button onclick="goBack()">Back</button>
+    </div>
+</div>
+
+<script>
+let images = [
+    "https://picsum.photos/id/1015/1200/800",
+    "https://picsum.photos/id/1016/1200/800",
+    "https://picsum.photos/id/1018/1200/800",
+    "https://picsum.photos/id/1020/1200/800",
+    "https://picsum.photos/id/1024/1200/800"
+];
+
+let captions = [
+    "Mountain & River View",
+    "Peaceful Nature",
+    "Green Forest Path",
+    "Serene Lake View",
+    "Wildlife Moment"
+];
+
+let index = 0;
+let interval;
+let sliderImage = document.getElementById("sliderImage");
+let bg = document.getElementById("bg");
+let caption = document.getElementById("caption");
+
+function startSlider() {
+    document.getElementById("welcome").style.display = "none";
+    document.getElementById("sliderPage").style.display = "flex";
+    showImage();
+    interval = setInterval(nextImage, 3000);
+}
+
+function showImage() {
+    sliderImage.src = images[index];
+    bg.style.backgroundImage = `url(${images[index]})`;
+    caption.innerText = captions[index];
+}
+
+function nextImage() {
+    index = (index + 1) % images.length;
+    showImage();
+}
+
+function prevImage() {
+    index = (index - 1 + images.length) % images.length;
+    showImage();
+}
+
+function goBack() {
+    clearInterval(interval);
+    document.getElementById("sliderPage").style.display = "none";
+    document.getElementById("welcome").style.display = "flex";
+}
+
+function exitApp() {
+    alert("Thank you for visiting!");
+    window.location.href = "about:blank"; // correct web exit
+}
+</script>
+
+</body>
+</html>
